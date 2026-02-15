@@ -1,0 +1,19 @@
+services:
+  cosmik-mppi:
+    image: cosmik-mppi
+    container_name: cosmik-mppi
+    privileged: true
+    entrypoint: ["/bin/bash"]
+    stdin_open: true
+    tty: true
+    network_mode: host
+    ipc: host
+    gpus: all
+    ulimits:
+      memlock: -1
+      stack: 67108864
+    environment:
+      DISPLAY: "${DISPLAY}"
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix
+      - ../workspace:/workspace
