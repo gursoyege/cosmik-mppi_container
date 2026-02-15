@@ -66,12 +66,5 @@ keep_only "${target_root}/ros2_ws/src/agimus-demos" "agimus_demos_common"
 keep_only "${target_root}/ros2_ws/src/franka_ros2" "franka_gazebo" "franka_gripper" "franka_hardware" "franka_msgs" "franka_robot_state_broadcaster" "franka_semantic_components"
 keep_only "${target_root}/ros2_ws/src/franka_ros2/franka_gazebo" "franka_ign_ros2_control"
 
-# Preserve local planner gain tuning used in current setup.
-planner_cfg="${target_root}/ros2_ws/src/storm_agimus_bridge/config/storm_mppi_planner_params.yaml"
-if [[ -f "${planner_cfg}" ]]; then
-  sed -i 's/kp: \[60.0\]/kp: [1000.0]/' "${planner_cfg}"
-  sed -i 's/kd: \[5.0\]/kd: [50.0]/' "${planner_cfg}"
-fi
-
 echo "Workspace populated at: ${target_root}"
 echo "Next: docker build -t storm-stack ."
