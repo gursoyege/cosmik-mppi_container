@@ -74,13 +74,13 @@ ros2 launch storm_pick_place_demo pick_place_sim_isaacsim.launch.py \
 Safety gate is controlled by `enable_motion` (default is `false`).
 
 ```bash
-# Dry run (no robot motion)
+# Dry run (no motion)
 ros2 launch storm_pick_place_demo pick_place_real.launch.py \
-  enable_motion:=false with_rviz:=true
+  robot_ip:=<ROBOT_IP> arm_id:=fer enable_motion:=false with_rviz:=true
 
 # Enable motion
 ros2 launch storm_pick_place_demo pick_place_real.launch.py \
-  enable_motion:=true with_rviz:=true
+  robot_ip:=<ROBOT_IP> arm_id:=fer enable_motion:=true with_rviz:=true
 ```
 
 ## Parameter Files
