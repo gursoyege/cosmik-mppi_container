@@ -25,6 +25,20 @@ What this does:
 3. Starts container `cosmik-mppi` through `docker/docker-compose.yml` with `./workspace` bind-mounted to `/workspace` inside the container.
 4. The container is not removed on exit by default.
 
+## Open / Reconnect Container Shell
+
+From repository root:
+
+```bash
+bash scripts/run.sh
+```
+
+`scripts/run.sh` behavior:
+1. If a matching container is already running, it opens `bash` in it.
+2. If a matching container exists but is stopped, it starts it and opens `bash`.
+3. If no matching container exists but image `cosmik-mppi` exists, it runs `docker compose -f docker/docker-compose.yml up -d cosmik-mppi` and then opens `bash`.
+4. If multiple containers exist from image `cosmik-mppi`, it warns and uses the newest one.
+
 ## Manual Commands (Optional)
 
 If you want to run steps separately:
@@ -42,11 +56,8 @@ docker compose -f docker/docker-compose.yml run cosmik-mppi
 
 ## Notes
 
-- To start a new interactive session with Compose:
-  - `docker compose -f docker/docker-compose.yml run cosmik-mppi`
-- To reconnect to the existing named container:
-  - `docker start cosmik-mppi` (if it is stopped)
-  - `docker exec -it cosmik-mppi bash`
+- Preferred way to enter/re-enter container shell:
+  - `bash scripts/run.sh`
 - You can also use VS Code: **Dev Containers: Attach to Running Container...** and select `cosmik-mppi`.
 - `run_inside_docker.sh` is executed during image build to install dependencies and run `colcon build`.
 - Runtime environment variables are set in the image:
