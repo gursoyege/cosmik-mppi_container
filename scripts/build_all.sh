@@ -27,8 +27,15 @@ fi
 "${script_dir}/populate_workspace.sh" "${workspace_dir}"
 docker build -t "${image_name}" -f "${docker_dir}/Dockerfile" "${root_dir}"
 
-xhost +local:docker
-trap 'xhost -local:docker >/dev/null 2>&1 || true' EXIT
+if [[ -n "${DISPLAY:-}" ]] && command -v xhost >/dev/null 2>&1; then
+  if xhost +local:docker >/dev/null 2>&1; then
+    trap 'xhost -local:docker >/dev/null 2>&1 || true' EXIT
+  else
+    echo "Warning: could not run 'xhost +local:docker' (DISPLAY=${DISPLAY}). Continuing without X11 ACL changes."
+  fi
+else
+  echo "DISPLAY is not set or xhost is unavailable; skipping X11 ACL setup."
+fi
 
 if docker compose version >/dev/null 2>&1; then
   compose_cmd=(docker compose)
@@ -39,5 +46,11 @@ else
   exit 1
 fi
 
-"${compose_cmd[@]}" -f "${docker_dir}/docker-compose.yml" run "${service_name}" "$@"
+if [[ "$#" -gt 0 ]]; then
+  container_cmd=("$@")
+else
+  container_cmd=("bash")
+fi
 
+"${compose_cmd[@]}" -f "${docker_dir}/docker-compose.yml" run "${service_name}" \
+  -lc '/usr/local/bin/run_inside_docker.sh && exec "$@"' _ "${container_cmd[@]}"
