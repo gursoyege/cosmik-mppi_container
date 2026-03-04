@@ -78,29 +78,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ros-${ROS_DISTRO}-parameter-traits \
     ros-${ROS_DISTRO}-rsl \
     ros-${ROS_DISTRO}-tcb-span \
-    ros-${ROS_DISTRO}-tl-expected \
-    ros-${ROS_DISTRO}-gtest-vendor \
-    ros-${ROS_DISTRO}-gmock-vendor \
-    ros-${ROS_DISTRO}-ament-cmake-gtest \
-    ros-${ROS_DISTRO}-ament-cmake-gmock \
-    ros-${ROS_DISTRO}-ament-cmake-clang-format \
-    ros-${ROS_DISTRO}-ros2controlcli \
-    ros-${ROS_DISTRO}-urdfdom-py \
-    libgtest-dev \
-    libgmock-dev \
-    && rm -rf /var/lib/apt/lists/*
+    ros-${ROS_DISTRO}-tl-expected && \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /workspace
 
 COPY ./workspace/ /workspace/
-COPY ./scripts/run_inside_docker.sh /usr/local/bin/run_inside_docker.sh
+COPY ./scripts/ /opt/cosmik/scripts/
 
 RUN test -e /workspace/storm && \
     test -e /workspace/IsaacLab && \
     test -e /workspace/ros2_ws/src/storm_agimus_bridge && \
-    test -e /workspace/ros2_ws/src/storm_pick_and_place_demo
+    test -e /workspace/ros2_ws/src/storm_pick_place_demo
 
-RUN chmod +x /usr/local/bin/run_inside_docker.sh
+RUN chmod +x /opt/cosmik/scripts/*.sh && \
+    if [ -f /opt/cosmik/scripts/run_inside_docker.sh ]; then \
+      /opt/cosmik/scripts/run_inside_docker.sh; \
+    else \
+      /opt/cosmik/scripts/build_inside_docker.sh; \
+    fi
 
 ENV STORM_ROOT=/workspace/storm
 ENV PYTHONPATH=/workspace/storm

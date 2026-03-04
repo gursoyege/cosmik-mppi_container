@@ -13,9 +13,7 @@ services:
       memlock: -1
       stack: 67108864
     environment:
-      DISPLAY: "${DISPLAY:-}"
-      XAUTHORITY: "/tmp/.docker.xauth"
+      DISPLAY: "${DISPLAY}"
     volumes:
       - /tmp/.X11-unix:/tmp/.X11-unix
-      - "${XAUTHORITY:-${HOME}/.Xauthority}:/tmp/.docker.xauth:ro"
       - ../workspace:/workspace
