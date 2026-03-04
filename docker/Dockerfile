@@ -92,11 +92,7 @@ RUN test -e /workspace/storm && \
     test -e /workspace/ros2_ws/src/storm_pick_place_demo
 
 RUN chmod +x /opt/cosmik/scripts/*.sh && \
-    if [ -f /opt/cosmik/scripts/run_inside_docker.sh ]; then \
-      /opt/cosmik/scripts/run_inside_docker.sh; \
-    else \
-      /opt/cosmik/scripts/build_inside_docker.sh; \
-    fi
+    /opt/cosmik/scripts/build_inside_docker.sh
 
 ENV STORM_ROOT=/workspace/storm
 ENV PYTHONPATH=/workspace/storm
